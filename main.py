@@ -11,6 +11,7 @@ bot = telebot.TeleBot(token)
 def welcome(message):
     bot.send_message(message.chat.id,"Привет, {0.first_name}!\nЯ - бот, который может обнаружить лица на фотографии".format(message.from_user, bot.get_me()))
     bot.send_message(message.chat.id, "Напиши /help, если захочешь открыть список команд")
+    bot.send_message(message.chat.id, "/info - узнать информацию об авторе")
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("Найти лица на фотографии")
     markup.add(item1)
@@ -24,6 +25,10 @@ def support(message):
     markup.add(item1)
     bot.send_message(message.chat.id, "Вот что я могу сделать для тебя:", reply_markup=markup)
 
+@bot.message_handler(commands=['info'])
+def showInfo(message):
+    bot.send_message(message.chat.id, "ВК: vk.com/rukavihnikov_mishka" + "\n" +  "Inst: rukavishn1kov" + "\n" +
+                     "Email: rukavishnikovmihail00@yandex.ru" + "\n" + "GitHub:https://github.com/rukavishnikovmihail00/Detector-Telebot")
 
 @bot.message_handler(content_types=['text'])
 def botAnswer(message):
