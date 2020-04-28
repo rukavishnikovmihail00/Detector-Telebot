@@ -1,15 +1,36 @@
 import telebot
 import cv2
 import random
+from telebot import types
 token = "1222340645:AAEIYp5m5QaYQx68tQ2xo-P7ccA5xE27OEQ"
 
 bot = telebot.TeleBot(token)
 
+
 @bot.message_handler(commands=['start'])
 def welcome(message):
     bot.send_message(message.chat.id,"Привет, {0.first_name}!\nЯ - бот, который может обнаружить лица на фотографии".format(message.from_user, bot.get_me()))
+    bot.send_message(message.chat.id, "Напиши /help, если захочешь открыть список команд")
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1 = types.KeyboardButton("Найти лица на фотографии")
+    markup.add(item1)
+    bot.send_message(message.chat.id, "Что ты хочешь сделать?", reply_markup=markup)
 
 
+@bot.message_handler(commands=['help'])
+def support(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1 = types.KeyboardButton("Найти лица на фотографии")
+    markup.add(item1)
+    bot.send_message(message.chat.id, "Вот что я могу сделать для тебя:", reply_markup=markup)
+
+
+@bot.message_handler(content_types=['text'])
+def botAnswer(message):
+    if message.text == 'Найти лица на фотографии':
+        bot.send_message(message.chat.id, "Тогда пришли мне фото с людьми")
+    else:
+        bot.send_message(message.chat.id, 'Я не понял, что ты от меня хочешь')
 
 @bot.message_handler(content_types=['photo'])
 def processPhoto(message):
@@ -20,10 +41,10 @@ def processPhoto(message):
         src=''+file_info.file_path;
         with open(src, 'wb') as new_file:
            new_file.write(downloaded_file)
-        bot.reply_to(message,"Фото добавлено")
+        bot.reply_to(message,"Фото обрабатывается, еще секунду...")
         print(src)
     except Exception:
-        bot.reply_to(message, "Я не смог добавить фото")
+        bot.reply_to(message, "У меня что-то пошло не так, попробуй еще раз")
 
 
     # Processing photo
@@ -44,5 +65,4 @@ def processPhoto(message):
     path = 'photos/' + str(name) + '.png'
     cv2.imwrite(path , image)
     bot.send_photo(message.chat.id, open(path, 'rb'))
-
 bot.polling(none_stop=True)
