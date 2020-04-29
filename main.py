@@ -2,8 +2,8 @@ import telebot
 import cv2
 import random
 from telebot import types
-token = "1222340645:AAEIYp5m5QaYQx68tQ2xo-P7ccA5xE27OEQ"
-#token = "1207803148:AAFfo8WM4mlOFQ0i8NADFEltALEp7YDbk-E"
+token = "TOKEN HERE"
+
 bot = telebot.TeleBot(token)
 
 
