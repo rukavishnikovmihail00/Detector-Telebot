@@ -3,7 +3,7 @@ import cv2
 import random
 from telebot import types
 token = "1222340645:AAEIYp5m5QaYQx68tQ2xo-P7ccA5xE27OEQ"
-
+#token = "1207803148:AAFfo8WM4mlOFQ0i8NADFEltALEp7YDbk-E"
 bot = telebot.TeleBot(token)
 
 
@@ -23,7 +23,7 @@ def support(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("Найти лица на фотографии")
     markup.add(item1)
-    bot.send_message(message.chat.id, "Вот что я могу сделать для тебя:", reply_markup=markup)
+    bot.send_message(message.chat.id, "Вот что я могу сделать для тебя:" + "\n" + "(открой встроенную клавиатуру)", reply_markup=markup)
 
 @bot.message_handler(commands=['info'])
 def showInfo(message):
@@ -42,8 +42,19 @@ def processPhoto(message):
     try:
         file_info = bot.get_file(message.photo[len(message.photo)-1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
-
-        src=''+file_info.file_path;
+        # Костыль
+        path = file_info.file_path
+        arr = list(path)
+        arr.remove('p')
+        arr.remove('h')
+        arr.remove('o')
+        arr.remove('t')
+        arr.remove('o')
+        arr.remove('s')
+        arr.remove('/')
+        new_path = ''.join(arr)
+        print(new_path)      
+        src=''+new_path
         with open(src, 'wb') as new_file:
            new_file.write(downloaded_file)
         bot.reply_to(message,"Фото обрабатывается, еще секунду...")
@@ -67,7 +78,7 @@ def processPhoto(message):
         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 255, 0), 2)
 
     name = random.randint(0,10000000)
-    path = 'photos/' + str(name) + '.png'
+    path = str(name) + '.png'
     cv2.imwrite(path , image)
     bot.send_photo(message.chat.id, open(path, 'rb'))
 bot.polling(none_stop=True)
