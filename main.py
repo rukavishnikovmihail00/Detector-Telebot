@@ -2,9 +2,11 @@ import telebot
 import cv2
 import random
 from telebot import types
-token = "TOKEN HERE"
-
+token = "1222340645:AAEIYp5m5QaYQx68tQ2xo-P7ccA5xE27OEQ"
+#token = "1207803148:AAFfo8WM4mlOFQ0i8NADFEltALEp7YDbk-E"
 bot = telebot.TeleBot(token)
+
+
 
 
 @bot.message_handler(commands=['start'])
@@ -29,6 +31,10 @@ def support(message):
 def showInfo(message):
     bot.send_message(message.chat.id, "ВК: vk.com/rukavihnikov_mishka" + "\n" +  "Inst: rukavishn1kov" + "\n" +
                      "Email: rukavishnikovmihail00@yandex.ru" + "\n" + "GitHub:https://github.com/rukavishnikovmihail00/Detector-Telebot")
+
+@bot.message_handler(content_types=['document'])
+def sayMessage(message):
+    bot.send_message(message.chat.id, "Нужно отправить фото не документом")
 
 @bot.message_handler(content_types=['text'])
 def botAnswer(message):
